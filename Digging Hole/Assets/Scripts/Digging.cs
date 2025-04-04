@@ -1,22 +1,22 @@
 using UnityEngine;
 
-public class Digg : MonoBehaviour
+public class Digging : MonoBehaviour
 {
     [Header("Dig Settings")]
-    public float digRadius = 2f;         // Радиус копания в метрах
-    public float digDepth = 0.3f;       // Глубина ямы в метрах
-    public Terrain terrain;             // Ссылка на Terrain
+    [SerializeField] private float digRadius = 2f;
+    [SerializeField] private float digDepth = 0.3f;
+    [SerializeField] private Terrain terrain;
 
     [Header("Visual Effects")]
-    public ParticleSystem digEffect;    // Эффект копания
-    public GameObject holeDecal;        // Декаль ямы (опционально)
-    public AudioClip digSound;         // Звук копания
+    [SerializeField] private ParticleSystem digEffect;
+    [SerializeField] private GameObject holeDecal;
+    [SerializeField] private AudioClip digSound;
 
     private TerrainData terrainData;
     private int heightmapWidth;
     private int heightmapHeight;
 
-    void Start()
+    private void Start()
     {
         if (terrain == null)
             terrain = Terrain.activeTerrain;
@@ -26,7 +26,7 @@ public class Digg : MonoBehaviour
         heightmapHeight = terrainData.heightmapResolution;
     }
 
-    void Update()
+    private void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
@@ -47,7 +47,6 @@ public class Digg : MonoBehaviour
 
     void DigAtPoint(Vector3 worldPosition)
     {
-        // Конвертируем мировые координаты в координаты террейна
         Vector3 terrainPos = worldPosition - terrain.transform.position;
         Vector3 normalizedPos = new Vector3(
             terrainPos.x / terrainData.size.x,
@@ -55,21 +54,17 @@ public class Digg : MonoBehaviour
             terrainPos.z / terrainData.size.z
         );
 
-        // Получаем текущие высоты
         int radiusInPixels = (int)(digRadius * heightmapWidth / terrainData.size.x);
         int pixelX = (int)(normalizedPos.x * heightmapWidth);
         int pixelY = (int)(normalizedPos.z * heightmapHeight);
 
-        // Рассчитываем область для изменения
         int startX = Mathf.Max(0, pixelX - radiusInPixels);
         int startY = Mathf.Max(0, pixelY - radiusInPixels);
         int width = Mathf.Min(radiusInPixels * 2, heightmapWidth - startX);
         int height = Mathf.Min(radiusInPixels * 2, heightmapHeight - startY);
 
-        // Получаем данные высот
         float[,] heights = terrainData.GetHeights(startX, startY, width, height);
 
-        // Модифицируем высоты
         float depthInHeightmap = digDepth / terrainData.size.y;
 
         for (int y = 0; y < height; y++)
@@ -89,29 +84,24 @@ public class Digg : MonoBehaviour
             }
         }
 
-        // Применяем изменения
         terrainData.SetHeights(startX, startY, heights);
 
-        // Визуальные эффекты
         PlayDigEffects(worldPosition);
     }
 
     void PlayDigEffects(Vector3 position)
     {
-        // Эффект частиц
         if (digEffect != null)
         {
             digEffect.transform.position = position;
             digEffect.Play();
         }
 
-        // Декаль ямы
         if (holeDecal != null)
         {
             Instantiate(holeDecal, position, Quaternion.identity);
         }
 
-        // Звук
         if (digSound != null)
         {
             AudioSource.PlayClipAtPoint(digSound, position);
