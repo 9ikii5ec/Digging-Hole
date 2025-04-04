@@ -5,6 +5,7 @@ public class Digging : MonoBehaviour
     [Header("Dig Settings")]
     [SerializeField] private float digRadius = 2f;
     [SerializeField] private float digDepth = 0.3f;
+    [SerializeField] private float maxDigDistance = 5f;
     [SerializeField] private Terrain terrain;
 
     [Header("Visual Effects")]
@@ -15,6 +16,7 @@ public class Digging : MonoBehaviour
     private TerrainData terrainData;
     private int heightmapWidth;
     private int heightmapHeight;
+    private Transform player;
 
     private void Start()
     {
@@ -24,6 +26,8 @@ public class Digging : MonoBehaviour
         terrainData = terrain.terrainData;
         heightmapWidth = terrainData.heightmapResolution;
         heightmapHeight = terrainData.heightmapResolution;
+
+        player = transform;
     }
 
     private void Update()
@@ -41,7 +45,12 @@ public class Digging : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit) && hit.collider is TerrainCollider)
         {
-            DigAtPoint(hit.point);
+            float distanceToPlayer = Vector3.Distance(hit.point, player.position);
+
+            if (distanceToPlayer <= maxDigDistance)
+            {
+                DigAtPoint(hit.point);
+            }
         }
     }
 
@@ -64,17 +73,13 @@ public class Digging : MonoBehaviour
         int height = Mathf.Min(radiusInPixels * 2, heightmapHeight - startY);
 
         float[,] heights = terrainData.GetHeights(startX, startY, width, height);
-
         float depthInHeightmap = digDepth / terrainData.size.y;
 
         for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)
             {
-                float distance = Vector2.Distance(
-                    new Vector2(x, y),
-                    new Vector2(width / 2, height / 2)
-                );
+                float distance = Vector2.Distance(new Vector2(x, y), new Vector2(width / 2, height / 2));
 
                 if (distance <= radiusInPixels)
                 {
