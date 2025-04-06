@@ -1,6 +1,7 @@
-using Digger.Modules.Core.Sources;
+п»їusing Digger.Modules.Core.Sources;
 using Digger.Modules.Runtime.Sources;
 using UnityEngine;
+using DG.Tweening;
 
 namespace Digger
 {
@@ -17,11 +18,16 @@ namespace Digger
         [Range(0f, 1f)] public float opacity = 0.5f;
 
         [Header("Restriction parameters")]
-        public float digRadius = 5f;
+        public float digDistance = 5f;
 
         [Header("Persistence parameters")]
         public KeyCode keyToPersistData = KeyCode.P;
         public KeyCode keyToDeleteData = KeyCode.K;
+
+        [Header("Shovel animation")]
+        public Transform shovel;
+        public float swingDuration = 0.2f;
+        public float swingAngle = 60f;
 
         private DiggerMasterRuntime diggerMasterRuntime;
         private Transform playerTransform;
@@ -34,33 +40,12 @@ namespace Digger
             if (!diggerMasterRuntime)
             {
                 enabled = false;
-                Debug.LogWarning(
-                    "DiggerRuntimeUsageExample требует DiggerMasterRuntime в сцене. Скрипт будет отключен.");
+                Debug.LogWarning("DiggerRuntimeUsageExample С‚СЂРµР±СѓРµС‚ DiggerMasterRuntime РІ СЃС†РµРЅРµ. РЎРєСЂРёРїС‚ Р±СѓРґРµС‚ РѕС‚РєР»СЋС‡РµРЅ.");
             }
         }
 
         private void Update()
         {
-            if (Input.GetMouseButton(0))
-            {
-                if (Physics.Raycast(transform.position, transform.forward, out var hit, 2000f))
-                {
-                    float distance = Vector3.Distance(playerTransform.position, hit.point);
-
-                    if (distance <= digRadius)
-                    {
-                        if (editAsynchronously)
-                        {
-                            diggerMasterRuntime.ModifyAsyncBuffured(hit.point, brush, action, textureIndex, opacity, size);
-                        }
-                        else
-                        {
-                            diggerMasterRuntime.Modify(hit.point, brush, action, textureIndex, opacity, size);
-                        }
-                    }
-                }
-            }
-
             if (Input.GetKeyDown(keyToPersistData))
             {
                 diggerMasterRuntime.PersistAll();
@@ -75,6 +60,64 @@ namespace Digger
                 Debug.Log("Deleted all persisted data");
 #endif
             }
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                Digging();
+            }
+        }
+
+        public void Digging()
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out var hit, 2000f))
+            {
+                float distance = Vector3.Distance(playerTransform.position, hit.point);
+
+                if (distance <= digDistance)
+                {
+                    if (editAsynchronously)
+                    {
+                        diggerMasterRuntime.ModifyAsyncBuffured(hit.point, brush, action, textureIndex, opacity, size);
+                    }
+                    else
+                    {
+                        diggerMasterRuntime.Modify(hit.point, brush, action, textureIndex, opacity, size);
+                    }
+
+                    AnimateShovel(hit.point);
+                }
+            }
+        }
+
+        private void AnimateShovel(Vector3 targetPoint)
+        {
+            shovel.DOKill();
+
+            Vector3 direction = (targetPoint - shovel.position).normalized;
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+
+            shovel.rotation = Quaternion.Slerp(shovel.rotation, targetRotation, Time.deltaTime * 10f);
+
+            Vector3 downRotation = shovel.localEulerAngles + new Vector3(-swingAngle * 1.2f, 0f, 0f);
+            Vector3 backSwingRotation = shovel.localEulerAngles + new Vector3(-swingAngle / 1.5f, 0f, 0f);
+            Vector3 originalRotation = shovel.localEulerAngles;
+
+            shovel
+                .DOLocalRotate(backSwingRotation, swingDuration * 0.4f, RotateMode.Fast)
+                .SetEase(Ease.OutQuad)
+                .OnComplete(() =>
+                {
+                    shovel
+                        .DOLocalRotate(downRotation, swingDuration, RotateMode.Fast)
+                        .SetEase(Ease.InCubic)
+                        .OnComplete(() =>
+                        {
+                            shovel
+                                .DOLocalRotate(originalRotation, swingDuration * 0.4f, RotateMode.Fast)
+                                .SetEase(Ease.InOutQuad);
+                        });
+                });
         }
     }
 }
