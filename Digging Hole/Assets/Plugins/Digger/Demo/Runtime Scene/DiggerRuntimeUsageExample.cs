@@ -94,30 +94,19 @@ namespace Digger
         {
             shovel.DOKill();
 
-            Vector3 direction = (targetPoint - shovel.position).normalized;
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
-
-            shovel.rotation = Quaternion.Slerp(shovel.rotation, targetRotation, Time.deltaTime * 10f);
-
-            Vector3 downRotation = shovel.localEulerAngles + new Vector3(-swingAngle * 1.2f, 0f, 0f);
-            Vector3 backSwingRotation = shovel.localEulerAngles + new Vector3(-swingAngle / 1.5f, 0f, 0f);
             Vector3 originalRotation = shovel.localEulerAngles;
+            Vector3 swingForward = originalRotation + new Vector3(-swingAngle, 0f, 0f);
 
             shovel
-                .DOLocalRotate(backSwingRotation, swingDuration * 0.4f, RotateMode.Fast)
+                .DOLocalRotate(swingForward, swingDuration * 0.5f, RotateMode.Fast)
                 .SetEase(Ease.OutQuad)
                 .OnComplete(() =>
                 {
                     shovel
-                        .DOLocalRotate(downRotation, swingDuration, RotateMode.Fast)
-                        .SetEase(Ease.InCubic)
-                        .OnComplete(() =>
-                        {
-                            shovel
-                                .DOLocalRotate(originalRotation, swingDuration * 0.4f, RotateMode.Fast)
-                                .SetEase(Ease.InOutQuad);
-                        });
+                        .DOLocalRotate(originalRotation, swingDuration * 0.5f, RotateMode.Fast)
+                        .SetEase(Ease.InQuad);
                 });
         }
+
     }
 }
