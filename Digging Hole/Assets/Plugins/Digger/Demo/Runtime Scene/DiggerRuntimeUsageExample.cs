@@ -1,7 +1,6 @@
 ﻿using Digger.Modules.Core.Sources;
 using Digger.Modules.Runtime.Sources;
 using UnityEngine;
-using Digger.Tools;
 
 namespace Digger
 {
@@ -25,7 +24,7 @@ namespace Digger
         public KeyCode keyToDeleteData = KeyCode.K;
 
         [Header("References")]
-        [SerializeField] private ShovelSettings Shovel;
+        //[SerializeField] private ShovelSettings Shovel;
 
         private DiggerMasterRuntime diggerMasterRuntime;
         private Transform playerTransform;
@@ -73,7 +72,7 @@ namespace Digger
                     else
                         diggerMasterRuntime.Modify(hit.point, brush, action, textureIndex, opacity, size);
 
-                    Shovel?.Swing();
+                    //Shovel?.Swing();
                 }
             }
         }

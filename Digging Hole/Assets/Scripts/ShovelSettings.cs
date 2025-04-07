@@ -1,37 +1,34 @@
 using DG.Tweening;
 using UnityEngine;
 
-namespace Digger.Tools
+public class ShovelSettings : MonoBehaviour
 {
-    public class ShovelSettings : MonoBehaviour
+    [Header("Shovel animation")]
+    [SerializeField] private Transform shovel;
+    [SerializeField] private float swingDuration = 0.2f;
+    [SerializeField] private float swingAngle = 60f;
+
+    private Vector3 originalRotation;
+
+    private void Awake()
     {
-        [Header("Shovel animation")]
-        [SerializeField] private Transform shovel;
-        [SerializeField] private float swingDuration = 0.2f;
-        [SerializeField] private float swingAngle = 60f;
+        originalRotation = shovel.localEulerAngles;
+    }
 
-        private Vector3 originalRotation;
+    public void Swing()
+    {
+        shovel.DOKill();
 
-        private void Awake()
-        {
-            originalRotation = shovel.localEulerAngles;
-        }
+        Vector3 swingForward = originalRotation + new Vector3(-swingAngle, 0f, 0f);
 
-        public void Swing()
-        {
-            shovel.DOKill();
-
-            Vector3 swingForward = originalRotation + new Vector3(-swingAngle, 0f, 0f);
-
-            shovel
-                .DOLocalRotate(swingForward, swingDuration * 0.5f, RotateMode.Fast)
-                .SetEase(Ease.OutQuad)
-                .OnComplete(() =>
-                {
-                    shovel
-                        .DOLocalRotate(originalRotation, swingDuration * 0.5f, RotateMode.Fast)
-                        .SetEase(Ease.InQuad);
-                });
-        }
+        shovel
+            .DOLocalRotate(swingForward, swingDuration * 0.5f, RotateMode.Fast)
+            .SetEase(Ease.OutQuad)
+            .OnComplete(() =>
+            {
+                shovel
+                    .DOLocalRotate(originalRotation, swingDuration * 0.5f, RotateMode.Fast)
+                    .SetEase(Ease.InQuad);
+            });
     }
 }
