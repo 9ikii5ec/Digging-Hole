@@ -1,7 +1,7 @@
 ﻿using Digger.Modules.Core.Sources;
 using Digger.Modules.Runtime.Sources;
 using UnityEngine;
-using DG.Tweening;
+using Digger.Tools;
 
 namespace Digger
 {
@@ -24,10 +24,8 @@ namespace Digger
         public KeyCode keyToPersistData = KeyCode.P;
         public KeyCode keyToDeleteData = KeyCode.K;
 
-        [Header("Shovel animation")]
-        public Transform shovel;
-        public float swingDuration = 0.2f;
-        public float swingAngle = 60f;
+        [Header("References")]
+        [SerializeField] private ShovelSettings Shovel;
 
         private DiggerMasterRuntime diggerMasterRuntime;
         private Transform playerTransform;
@@ -49,16 +47,10 @@ namespace Digger
             if (Input.GetKeyDown(keyToPersistData))
             {
                 diggerMasterRuntime.PersistAll();
-#if !UNITY_EDITOR
-                Debug.Log("Persisted all modified chunks");
-#endif
             }
             else if (Input.GetKeyDown(keyToDeleteData))
             {
                 diggerMasterRuntime.DeleteAllPersistedData();
-#if !UNITY_EDITOR
-                Debug.Log("Deleted all persisted data");
-#endif
             }
 
             if (Input.GetMouseButtonDown(0))
@@ -77,36 +69,13 @@ namespace Digger
                 if (distance <= digDistance)
                 {
                     if (editAsynchronously)
-                    {
                         diggerMasterRuntime.ModifyAsyncBuffured(hit.point, brush, action, textureIndex, opacity, size);
-                    }
                     else
-                    {
                         diggerMasterRuntime.Modify(hit.point, brush, action, textureIndex, opacity, size);
-                    }
 
-                    AnimateShovel(hit.point);
+                    Shovel?.Swing();
                 }
             }
         }
-
-        private void AnimateShovel(Vector3 targetPoint)
-        {
-            shovel.DOKill();
-
-            Vector3 originalRotation = shovel.localEulerAngles;
-            Vector3 swingForward = originalRotation + new Vector3(-swingAngle, 0f, 0f);
-
-            shovel
-                .DOLocalRotate(swingForward, swingDuration * 0.5f, RotateMode.Fast)
-                .SetEase(Ease.OutQuad)
-                .OnComplete(() =>
-                {
-                    shovel
-                        .DOLocalRotate(originalRotation, swingDuration * 0.5f, RotateMode.Fast)
-                        .SetEase(Ease.InQuad);
-                });
-        }
-
     }
 }
