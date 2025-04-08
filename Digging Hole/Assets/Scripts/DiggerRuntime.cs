@@ -21,8 +21,13 @@ public class DiggerRuntime : MonoBehaviour
     public KeyCode keyToPersistData = KeyCode.P;
     public KeyCode keyToDeleteData = KeyCode.K;
 
-    [Header("References")]
+    [Header("Shovel")]
     [SerializeField] private ShovelSettings Shovel;
+
+    [Header("Other")]
+    [SerializeField] private Battery battery;
+    [SerializeField] private float energyShovelCost = 1f;
+    [SerializeField] private JetPuck jetPuck;
 
     private DiggerMasterRuntime diggerMasterRuntime;
     private Transform playerTransform;
@@ -71,6 +76,7 @@ public class DiggerRuntime : MonoBehaviour
                     diggerMasterRuntime.Modify(hit.point, brush, action, textureIndex, opacity, size);
 
                 Shovel?.Swing();
+                battery.ChangeBatteryEnergy(energyShovelCost);
             }
         }
     }
