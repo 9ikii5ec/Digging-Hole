@@ -6,9 +6,9 @@ public class JetPuck : MonoBehaviour
     [SerializeField] private GroundCheck groundCheck;
 
     [Header("Settings")]
+    public float flyForce = 5f;
+    public float flyEnergyCost = 1f;
     [SerializeField] private Battery battery;
-    [SerializeField] private float flyForce = 5f;
-    [SerializeField] private float flyEnergyCost = 1f;
 
     private new Rigidbody rigidbody;
 

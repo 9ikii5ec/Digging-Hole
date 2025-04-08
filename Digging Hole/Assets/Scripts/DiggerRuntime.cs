@@ -28,6 +28,7 @@ public class DiggerRuntime : MonoBehaviour
     [SerializeField] private Battery battery;
     [SerializeField] private float energyShovelCost = 1f;
     [SerializeField] private JetPuck jetPuck;
+    [SerializeField] private Inventory backPuck;
 
     private DiggerMasterRuntime diggerMasterRuntime;
     private Transform playerTransform;
@@ -57,7 +58,10 @@ public class DiggerRuntime : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            Digging();
+            backPuck.UpdateInventoryRaycast();
+
+            if (battery.energy > 0)
+                Digging();
         }
     }
 

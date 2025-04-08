@@ -17,9 +17,18 @@ public class Balance : MonoBehaviour
         balance.text = money.ToString() + " $";
     }
 
-    public void UpdateBalance(int value)
+    public void UpdateMinusBalance(int value)
     {
-        money -= value;
+        if (money >= value)
+        {
+            money -= value;
+            balance.text = money.ToString() + " $";
+        }
+    }
+
+    public void UpdatePlusBalance(int value)
+    {
+        money += value;
         balance.text = money.ToString() + " $";
     }
 }

@@ -26,7 +26,7 @@ public class ImageChanger : MonoBehaviour
     {
         if (balance.money >= cost)
         {
-            balance.UpdateBalance(cost);
+            balance.UpdateMinusBalance(cost);
             cost += cost / 2;
             priceText.text = cost.ToString() + " $";
 

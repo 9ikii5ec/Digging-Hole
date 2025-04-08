@@ -7,7 +7,7 @@ public class Battery : MonoBehaviour
     public float energy;
 
     [Header("Battery Settings")]
-    [SerializeField] private float maxEnergy = 100f;
+    public float maxEnergy = 100f;
     [SerializeField] private Image image;
 
     private void Start()
