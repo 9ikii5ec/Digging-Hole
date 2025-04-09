@@ -24,6 +24,8 @@ public class ImageChanger : MonoBehaviour
 
     public void ImageUpdater(float value)
     {
+        if (image.fillAmount >= 1f) return;
+
         if (balance.money >= cost)
         {
             balance.UpdateMinusBalance(cost);

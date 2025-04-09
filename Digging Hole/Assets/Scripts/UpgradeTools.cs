@@ -5,19 +5,31 @@ public class UpgradeTools : MonoBehaviour
     [SerializeField] private JetPuck jetpack;
     [SerializeField] private Battery battery;
     [SerializeField] private DiggerRuntime digger;
-    [SerializeField] private Balance balance;
     [SerializeField] private Inventory backPuck;
+    [SerializeField] private Balance balance;
+
+    [Header("Tools Image")]
+    [SerializeField] private ImageChanger jetpackImage;
+    [SerializeField] private ImageChanger batteryImage;
+    [SerializeField] private ImageChanger diggerImage;
+    [SerializeField] private ImageChanger backPuckImage;
 
     public void UpgradeJetPack(int value)
     {
-        jetpack.flyForce += value;
-        jetpack.flyEnergyCost += value;
+        if (balance.money >= jetpackImage.cost)
+        {
+            jetpack.flyForce += value;
+            jetpack.flyEnergyCost += value;
+        }
     }
 
     public void UpgradeBattery(int value)
     {
-        battery.maxEnergy += value;
-        battery.energy += value;
+        if (balance.money >= batteryImage.cost)
+        {
+            battery.maxEnergy += value;
+            battery.energy += value;
+        }
     }
 
     public void FullBattery()
@@ -29,12 +41,18 @@ public class UpgradeTools : MonoBehaviour
 
     public void UpgardeDiggerSize(float value)
     {
-        digger.defaultSize += value;
+        if (balance.money >= diggerImage.cost)
+        {
+            digger.defaultSize += value;
+        }
     }
 
     public void UpgardeBackPuck(int value = 5)
     {
-        backPuck.maxCells += value;
-        backPuck.ResetBackPuck();
+        if (balance.money >= backPuckImage.cost)
+        {
+            backPuck.maxCells += value;
+            backPuck.ResetBackPuck();
+        }
     }
 }
