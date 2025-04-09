@@ -30,6 +30,7 @@ public class TriggerForShop : MonoBehaviour
         {
             balance.UpdatePlusBalance(backPuck.GetOrePrice());
             backPuck.SellOneItem();
+            backPuck.ResetBackPuck();
         }
     }
 }

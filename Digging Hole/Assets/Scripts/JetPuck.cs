@@ -31,6 +31,6 @@ public class JetPuck : MonoBehaviour
     private void Fly()
     {
         rigidbody.AddForce(Vector3.up * flyForce, ForceMode.Acceleration);
-        battery.ChangeBatteryEnergy(flyEnergyCost * Time.deltaTime);
+        battery.MinusBatteryEnergy(flyEnergyCost * Time.deltaTime);
     }
 }

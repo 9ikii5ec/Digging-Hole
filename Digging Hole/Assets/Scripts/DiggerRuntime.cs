@@ -80,7 +80,7 @@ public class DiggerRuntime : MonoBehaviour
                     diggerMasterRuntime.Modify(hit.point, brush, action, textureIndex, opacity, size);
 
                 Shovel?.Swing();
-                battery.ChangeBatteryEnergy(energyShovelCost);
+                battery.MinusBatteryEnergy(energyShovelCost);
             }
         }
     }

@@ -15,9 +15,17 @@ public class Battery : MonoBehaviour
         energy = maxEnergy;
     }
 
-    public void ChangeBatteryEnergy(float value)
+    public void MinusBatteryEnergy(float value)
     {
         energy -= value;
+        energy = Mathf.Clamp(energy, 0, maxEnergy);
+
+        image.fillAmount = energy / maxEnergy;
+    }
+
+    public void PlusBatteryEnergy(float value)
+    {
+        energy += value;
         energy = Mathf.Clamp(energy, 0, maxEnergy);
 
         image.fillAmount = energy / maxEnergy;
