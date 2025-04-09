@@ -13,7 +13,7 @@ public class ImageChanger : MonoBehaviour
     [SerializeField] private Balance balance;
 
     [Header("UpgradeCost")]
-    [SerializeField] private int cost = 10;
+    public int cost = 10;
     [SerializeField] private Text priceText;
 
     private void Start()

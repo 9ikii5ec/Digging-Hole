@@ -29,7 +29,7 @@ public class UpgradeTools : MonoBehaviour
 
     public void UpgardeDiggerSize(float value)
     {
-        digger.size += value;
+        digger.defaultSize += value;
     }
 
     public void UpgardeBackPuck(int value = 5)

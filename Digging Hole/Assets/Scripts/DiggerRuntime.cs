@@ -13,6 +13,7 @@ public class DiggerRuntime : MonoBehaviour
     [Range(0, 7)] public int textureIndex;
     [Range(0.5f, 10f)] public float size = 4f;
     [Range(0f, 1f)] public float opacity = 0.5f;
+    public float defaultSize;
 
     [Header("Restriction parameters")]
     public float digDistance = 5f;
@@ -37,6 +38,7 @@ public class DiggerRuntime : MonoBehaviour
     {
         diggerMasterRuntime = FindObjectOfType<DiggerMasterRuntime>();
         playerTransform = transform;
+        defaultSize = size;
 
         if (!diggerMasterRuntime)
         {
@@ -91,15 +93,28 @@ public class DiggerRuntime : MonoBehaviour
     private void CheckYHeight()
     {
         float y = transform.position.y;
+        size = defaultSize;
 
         if (y <= -30f)
-            textureIndex = 5;
+        {
+            textureIndex = 3;
+            size -= 1f;
+        }
         else if (y <= -15f)
+        {
             textureIndex = 4;
-        else if (y <= 0f)
+            size -= 0.5f;
+        }
+        else if (y <= -1f)
+        {
             textureIndex = 2;
-        else
+            size = defaultSize;
+        }
+        else if (y >= 1f)
+        {
             textureIndex = 0;
-
+            size = defaultSize;
+        }
     }
+
 }
