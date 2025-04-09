@@ -33,8 +33,8 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _TerrainHeightInv: 0.04901961
-    - _TerrainWidthInv: 0.04784689
+    - _TerrainHeightInv: 0.049504947
+    - _TerrainWidthInv: 0.04995005
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []

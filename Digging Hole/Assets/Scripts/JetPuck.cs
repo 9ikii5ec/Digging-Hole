@@ -10,6 +10,7 @@ public class JetPuck : MonoBehaviour
     public float flyEnergyCost = 1f;
     [SerializeField] private Battery battery;
 
+    public float gravityCompensation = 9.81f;
     private new Rigidbody rigidbody;
 
     private void Start()
@@ -19,7 +20,7 @@ public class JetPuck : MonoBehaviour
 
     private void Update()
     {
-        if (!groundCheck.isGrounded && battery.energy > 0f)
+        if (battery.energy > 0f)
         {
             if (Input.GetKey(KeyCode.Space))
             {
@@ -30,7 +31,7 @@ public class JetPuck : MonoBehaviour
 
     private void Fly()
     {
-        rigidbody.AddForce(Vector3.up * flyForce, ForceMode.Acceleration);
+        rigidbody.AddForce(Vector3.up * (flyForce + gravityCompensation), ForceMode.Acceleration);
         battery.MinusBatteryEnergy(flyEnergyCost * Time.deltaTime);
     }
 }

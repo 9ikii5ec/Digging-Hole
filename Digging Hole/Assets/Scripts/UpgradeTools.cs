@@ -23,7 +23,7 @@ public class UpgradeTools : MonoBehaviour
     public void FullBattery()
     {
         float value = battery.maxEnergy - battery.energy;
-        if (balance.money >= value)
+        if (balance.money >= 15)
             battery.PlusBatteryEnergy(value);
     }
 

@@ -13,7 +13,7 @@ public class RudeSpawner : MonoBehaviour
 
     [Header("Grid Settings")]
     [SerializeField] private int width = 10;
-    [SerializeField] private int height = 70; // увеличил общее количество, чтобы уместить все слои
+    [SerializeField] private int height = 70;
     [SerializeField] private float blockSize = 1f;
 
     [Header("Layer Heights")]
@@ -26,7 +26,7 @@ public class RudeSpawner : MonoBehaviour
     [SerializeField] private int stoneHeight = 20;
 
     [Header("Randomization")]
-    [Range(0f, 1f)][SerializeField] private float spawnChance = 0.9f;
+    [Range(0f, 100f)][SerializeField] private float spawnChance = 0.9f;
     [SerializeField] private float zOffsetRange = 0.5f;
 
     private void Start()

@@ -74,6 +74,8 @@ public class DiggerRuntime : MonoBehaviour
 
             if (distance <= digDistance)
             {
+                CheckYHeight();
+
                 if (editAsynchronously)
                     diggerMasterRuntime.ModifyAsyncBuffured(hit.point, brush, action, textureIndex, opacity, size);
                 else
@@ -83,5 +85,21 @@ public class DiggerRuntime : MonoBehaviour
                 battery.MinusBatteryEnergy(energyShovelCost);
             }
         }
+    }
+
+
+    private void CheckYHeight()
+    {
+        float y = transform.position.y;
+
+        if (y <= -30f)
+            textureIndex = 5;
+        else if (y <= -15f)
+            textureIndex = 4;
+        else if (y <= 0f)
+            textureIndex = 2;
+        else
+            textureIndex = 0;
+
     }
 }
