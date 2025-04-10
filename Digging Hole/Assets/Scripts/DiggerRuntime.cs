@@ -95,7 +95,11 @@ public class DiggerRuntime : MonoBehaviour
         float y = transform.position.y;
         size = defaultSize;
 
-        if (y <= -30f)
+        if (y <= -50f)
+        {
+            action = ActionType.PaintHoles;
+        }
+        else if (y <= -30f)
         {
             textureIndex = 3;
             size -= 1f;

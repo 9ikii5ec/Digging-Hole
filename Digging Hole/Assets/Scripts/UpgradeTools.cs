@@ -16,7 +16,7 @@ public class UpgradeTools : MonoBehaviour
 
     public void UpgradeJetPack(int value)
     {
-        if (balance.money >= jetpackImage.cost)
+        if (balance.money >= jetpackImage.cost && jetpackImage.image.fillAmount < 1f)
         {
             jetpack.flyForce += value;
             jetpack.flyEnergyCost += value;
@@ -25,7 +25,7 @@ public class UpgradeTools : MonoBehaviour
 
     public void UpgradeBattery(int value)
     {
-        if (balance.money >= batteryImage.cost)
+        if (balance.money >= batteryImage.cost && batteryImage.image.fillAmount < 1f)
         {
             battery.maxEnergy += value;
             battery.energy += value;
@@ -41,7 +41,7 @@ public class UpgradeTools : MonoBehaviour
 
     public void UpgardeDiggerSize(float value)
     {
-        if (balance.money >= diggerImage.cost)
+        if (balance.money >= diggerImage.cost && diggerImage.image.fillAmount < 1f)
         {
             digger.defaultSize += value;
         }
@@ -49,7 +49,7 @@ public class UpgradeTools : MonoBehaviour
 
     public void UpgardeBackPuck(int value = 5)
     {
-        if (balance.money >= backPuckImage.cost)
+        if (balance.money >= backPuckImage.cost && backPuckImage.image.fillAmount < 1f)
         {
             backPuck.maxCells += value;
             backPuck.ResetBackPuck();

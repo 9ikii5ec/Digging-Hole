@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class ImageChanger : MonoBehaviour
 {
-    private Image image;
+    public Image image;
 
     [Header("Gradient Colors")]
     [SerializeField] private Color emptyColor = Color.yellow;

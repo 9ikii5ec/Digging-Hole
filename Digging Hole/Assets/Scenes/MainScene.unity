@@ -4219,7 +4219,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 494591544}
+      - m_Target: {fileID: 1017006320}
         m_TargetAssemblyTypeName: ImageChanger, Assembly-CSharp
         m_MethodName: ImageUpdater
         m_Mode: 4
@@ -22112,7 +22112,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4207293392497186, guid: 11aaea5348574644a9eb4f4504fcce3f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 289.25
+      value: 304.75
       objectReference: {fileID: 0}
     - target: {fileID: 4207293392497186, guid: 11aaea5348574644a9eb4f4504fcce3f, type: 3}
       propertyPath: m_LocalPosition.y
@@ -22120,7 +22120,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4207293392497186, guid: 11aaea5348574644a9eb4f4504fcce3f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 345.5
+      value: 356
       objectReference: {fileID: 0}
     - target: {fileID: 4207293392497186, guid: 11aaea5348574644a9eb4f4504fcce3f, type: 3}
       propertyPath: m_LocalRotation.w
@@ -22344,6 +22344,7 @@ MonoBehaviour:
   flyEnergyCost: 1
   battery: {fileID: 1192072684}
   gravityCompensation: 4
+  maxFlySpeed: 5
 --- !u!114 &1192072692
 MonoBehaviour:
   m_ObjectHideFlags: 0
