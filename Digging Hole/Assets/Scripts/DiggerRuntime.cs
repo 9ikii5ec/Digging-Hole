@@ -22,8 +22,9 @@ public class DiggerRuntime : MonoBehaviour
     public KeyCode keyToPersistData = KeyCode.P;
     public KeyCode keyToDeleteData = KeyCode.K;
 
-    [Header("Shovel")]
+    [Header("Settings")]
     [SerializeField] private ShovelSettings Shovel;
+    [SerializeField] private UpgradeTools tools;
 
     [Header("Other")]
     [SerializeField] private Battery battery;
@@ -49,6 +50,8 @@ public class DiggerRuntime : MonoBehaviour
 
     private void Update()
     {
+        tools.PlaceLamp();
+
         if (Input.GetKeyDown(keyToPersistData))
         {
             diggerMasterRuntime.PersistAll();

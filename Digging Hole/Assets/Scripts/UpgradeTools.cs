@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UpgradeTools : MonoBehaviour
 {
@@ -13,6 +14,13 @@ public class UpgradeTools : MonoBehaviour
     [SerializeField] private ImageChanger batteryImage;
     [SerializeField] private ImageChanger diggerImage;
     [SerializeField] private ImageChanger backPuckImage;
+
+    [Header("LampSettings")]
+    [SerializeField] private GameObject lamp;
+    [SerializeField] private Camera playerCamera;
+    [SerializeField] private float maxDistance = 5f;
+    [SerializeField] private Text lampText;
+    private int lampCount;
 
     public void UpgradeJetPack(int value)
     {
@@ -53,6 +61,36 @@ public class UpgradeTools : MonoBehaviour
         {
             backPuck.maxCells += value;
             backPuck.ResetBackPuck();
+        }
+    }
+
+    public void BuyLamp()
+    {
+        if (balance.money >= 10)
+        {
+            lampCount++;
+            lampText.text = "Lamp: " + lampCount.ToString();
+        }
+
+    }
+
+    public void PlaceLamp()
+    {
+        if (lampCount > 0 && Input.GetKeyDown(KeyCode.L))
+        {
+            lampCount--;
+            lampText.text = "Lamp: " + lampCount.ToString();
+
+            Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit, maxDistance))
+            {
+                Vector3 spawnPosition = hit.point + Vector3.up * 0.1f;
+                Quaternion rotation = Quaternion.Euler(0, 180, 0);
+
+                Instantiate(lamp, spawnPosition, rotation);
+            }
         }
     }
 }
