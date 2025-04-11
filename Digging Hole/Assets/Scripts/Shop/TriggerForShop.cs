@@ -5,14 +5,14 @@ public class TriggerForShop : MonoBehaviour
     [SerializeField] private Canvas shopCanvas;
     [SerializeField] private Inventory backPuck;
     [SerializeField] private Balance balance;
+    [SerializeField] private GameObject ShopButton;
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent<FirstPersonMovement>(out FirstPersonMovement person))
         {
-            shopCanvas.gameObject.SetActive(true);
-
             Cursor.lockState = CursorLockMode.None;
+            ShopButton.SetActive(true);
 
             CellItems();
         }
@@ -22,6 +22,7 @@ public class TriggerForShop : MonoBehaviour
     {
         shopCanvas.gameObject.SetActive(false);
         Cursor.lockState = CursorLockMode.Locked;
+        ShopButton.SetActive(false);
     }
 
     private void CellItems()
@@ -32,5 +33,11 @@ public class TriggerForShop : MonoBehaviour
             backPuck.SellOneItem();
             backPuck.ResetBackPuck();
         }
+    }
+
+    public void OpenShop()
+    {
+        shopCanvas.gameObject.SetActive(true);
+        ShopButton.SetActive(false);
     }
 }

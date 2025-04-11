@@ -1,6 +1,8 @@
 using Digger.Modules.Core.Sources;
 using Digger.Modules.Runtime.Sources;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class DiggerRuntime : MonoBehaviour
 {
@@ -31,9 +33,12 @@ public class DiggerRuntime : MonoBehaviour
     [SerializeField] private float energyShovelCost = 1f;
     [SerializeField] private JetPuck jetPuck;
     [SerializeField] private Inventory backPuck;
+    [SerializeField] private Text height;
+    [SerializeField] private GameObject restartButton;
 
     private DiggerMasterRuntime diggerMasterRuntime;
     private Transform playerTransform;
+    private bool isCanDigging = true;
 
     private void Start()
     {
@@ -51,6 +56,13 @@ public class DiggerRuntime : MonoBehaviour
     private void Update()
     {
         tools.PlaceLamp();
+        height.text = "Height: " + transform.position.y.ToString("F1") + " m";
+        if (transform.position.y <= -60f)
+        {
+            restartButton.SetActive(true);
+            isCanDigging = false;
+            Cursor.lockState = CursorLockMode.None;
+        }
 
         if (Input.GetKeyDown(keyToPersistData))
         {
@@ -72,6 +84,8 @@ public class DiggerRuntime : MonoBehaviour
 
     public void Digging()
     {
+        if (!isCanDigging) return;
+
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out var hit, 2000f))
         {
@@ -88,6 +102,7 @@ public class DiggerRuntime : MonoBehaviour
 
                 Shovel?.Swing();
                 battery.MinusBatteryEnergy(energyShovelCost);
+
             }
         }
     }
@@ -124,4 +139,9 @@ public class DiggerRuntime : MonoBehaviour
         }
     }
 
+    public void RestartScene()
+    {
+        int currentScene = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.LoadScene(currentScene);
+    }
 }
