@@ -3,6 +3,7 @@ using Digger.Modules.Runtime.Sources;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class DiggerRuntime : MonoBehaviour
 {
@@ -49,7 +50,7 @@ public class DiggerRuntime : MonoBehaviour
         if (!diggerMasterRuntime)
         {
             enabled = false;
-            Debug.LogWarning("DiggerRuntimeUsageExample требует DiggerMasterRuntime в сцене. Скрипт будет отключен.");
+            Debug.LogWarning("DiggerRuntime требует DiggerMasterRuntime в сцене. Скрипт будет отключен.");
         }
     }
 
@@ -57,11 +58,11 @@ public class DiggerRuntime : MonoBehaviour
     {
         tools.PlaceLamp();
         height.text = "Height: " + transform.position.y.ToString("F1") + " m";
+
         if (transform.position.y <= -60f)
         {
             restartButton.SetActive(true);
             isCanDigging = false;
-            Cursor.lockState = CursorLockMode.None;
         }
 
         if (Input.GetKeyDown(keyToPersistData))
@@ -73,13 +74,39 @@ public class DiggerRuntime : MonoBehaviour
             diggerMasterRuntime.DeleteAllPersistedData();
         }
 
+#if UNITY_EDITOR || UNITY_STANDALONE
         if (Input.GetMouseButtonDown(0))
         {
+            if (IsTouchingUI()) return;
+
             backPuck.UpdateInventoryRaycast();
 
             if (battery.energy > 0)
                 Digging();
         }
+#else
+        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
+        {
+            if (IsTouchingUI()) return;
+
+            backPuck.UpdateInventoryRaycast();
+
+            if (battery.energy > 0)
+                Digging();
+        }
+#endif
+    }
+
+    private bool IsTouchingUI()
+    {
+#if UNITY_EDITOR || UNITY_STANDALONE
+        return EventSystem.current.IsPointerOverGameObject();
+#else
+        if (Input.touchCount > 0)
+            return EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId);
+        else
+            return false;
+#endif
     }
 
     public void Digging()
@@ -102,11 +129,9 @@ public class DiggerRuntime : MonoBehaviour
 
                 Shovel?.Swing();
                 battery.MinusBatteryEnergy(energyShovelCost);
-
             }
         }
     }
-
 
     private void CheckYHeight()
     {

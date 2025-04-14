@@ -8,11 +8,18 @@ public class Battery : MonoBehaviour
 
     [Header("Battery Settings")]
     public float maxEnergy = 100f;
+
+    [Header("BatteryImageSettings")]
     [SerializeField] private Image image;
+    [SerializeField] private Sprite lowBattery;
+    [SerializeField] private Sprite lowMiddleBattery;
+    [SerializeField] private Sprite heightMiddleBattery;
+    [SerializeField] private Sprite heightBattery;
 
     private void Start()
     {
         energy = maxEnergy;
+        UpdateBatteryImage();
     }
 
     public void MinusBatteryEnergy(float value)
@@ -20,7 +27,7 @@ public class Battery : MonoBehaviour
         energy -= value;
         energy = Mathf.Clamp(energy, 0, maxEnergy);
 
-        image.fillAmount = energy / maxEnergy;
+        UpdateBatteryImage();
     }
 
     public void PlusBatteryEnergy(float value)
@@ -28,6 +35,28 @@ public class Battery : MonoBehaviour
         energy += value;
         energy = Mathf.Clamp(energy, 0, maxEnergy);
 
-        image.fillAmount = energy / maxEnergy;
+        UpdateBatteryImage();
+    }
+
+    private void UpdateBatteryImage()
+    {
+        float percent = energy / maxEnergy;
+
+        if (percent > 0.5f)
+        {
+            image.sprite = heightBattery;
+        }
+        else if (percent > 0.2f)
+        {
+            image.sprite = heightMiddleBattery;
+        }
+        else if (percent > 0.1f)
+        {
+            image.sprite = lowMiddleBattery;
+        }
+        else
+        {
+            image.sprite = lowBattery;
+        }
     }
 }

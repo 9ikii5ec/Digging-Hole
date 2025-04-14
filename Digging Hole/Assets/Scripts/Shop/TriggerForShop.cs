@@ -11,7 +11,7 @@ public class TriggerForShop : MonoBehaviour
     {
         if (other.TryGetComponent<FirstPersonMovement>(out FirstPersonMovement person))
         {
-            Cursor.lockState = CursorLockMode.None;
+            //Cursor.lockState = CursorLockMode.None;
             ShopButton.SetActive(true);
 
             CellItems();
@@ -21,7 +21,7 @@ public class TriggerForShop : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         shopCanvas.gameObject.SetActive(false);
-        Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.lockState = CursorLockMode.Locked;
         ShopButton.SetActive(false);
     }
 

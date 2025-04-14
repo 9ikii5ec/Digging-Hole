@@ -23,18 +23,19 @@ public class JetPuck : MonoBehaviour
 
     private void Update()
     {
-        if (battery.energy > 0f && Input.GetKey(KeyCode.Space))
-        {
+        if (Input.GetKey(KeyCode.Space))
             Fly();
-        }
     }
 
-    private void Fly()
+    public void Fly()
     {
-        if (rigidbody.velocity.y < maxFlySpeed)
+        if (battery.energy > 0f)
         {
-            rigidbody.AddForce(Vector3.up * (flyForce + gravityCompensation), ForceMode.Acceleration);
-            battery.MinusBatteryEnergy(flyEnergyCost * Time.deltaTime);
+            if (rigidbody.velocity.y < maxFlySpeed)
+            {
+                rigidbody.AddForce(Vector3.up * (flyForce + gravityCompensation), ForceMode.Acceleration);
+                battery.MinusBatteryEnergy(flyEnergyCost * Time.deltaTime);
+            }
         }
     }
 }
