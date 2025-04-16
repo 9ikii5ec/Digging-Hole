@@ -12,15 +12,16 @@ public class FirstPersonLook : MonoBehaviour
     private int lookFingerId = -1;
     private Vector2 lastTouchPosition;
 
-    private void Reset()
-    {
-        character = GetComponentInParent<FirstPersonMovement>().transform;
-    }
-
     private void Start()
     {
-        //Cursor.lockState = CursorLockMode.Locked;
+        // Получаем начальные углы поворота
+        Vector3 characterRotation = character.localEulerAngles;
+        Vector3 cameraRotation = transform.localEulerAngles;
+
+        velocity.x = characterRotation.y;
+        velocity.y = -cameraRotation.x;
     }
+
 
     private void Update()
     {

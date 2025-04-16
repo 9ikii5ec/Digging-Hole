@@ -27,7 +27,6 @@ public class UpgradeTools : MonoBehaviour
         if (balance.money >= jetpackImage.cost && jetpackImage.image.fillAmount < 1f)
         {
             jetpack.flyForce += value;
-            jetpack.flyEnergyCost += value;
         }
     }
 
@@ -70,14 +69,17 @@ public class UpgradeTools : MonoBehaviour
         {
             lampCount++;
             lampText.text = "Lamp: " + lampCount.ToString();
+            Debug.Log("Buy Lamp");
         }
 
     }
 
     public void PlaceLamp()
     {
-        if (lampCount > 0 && Input.GetKeyDown(KeyCode.L))
+        if (lampCount > 0)
         {
+            Debug.Log("Place Lamp");
+
             lampCount--;
             lampText.text = "Lamp: " + lampCount.ToString();
 

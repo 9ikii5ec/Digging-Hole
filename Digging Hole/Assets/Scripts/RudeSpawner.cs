@@ -26,7 +26,7 @@ public class RudeSpawner : MonoBehaviour
     [SerializeField] private int stoneHeight = 20;
 
     [Header("Randomization")]
-    [Range(0f, 100f)][SerializeField] private float spawnChance = 0.9f;
+    [Range(0f, 1f)][SerializeField] private float spawnChance = 0.9f;
     [SerializeField] private float zOffsetRange = 0.5f;
 
     private void Start()
@@ -67,7 +67,6 @@ public class RudeSpawner : MonoBehaviour
                     continue;
 
                 float zOffset = Random.Range(-zOffsetRange, zOffsetRange);
-
                 Vector3 spawnPos = origin + new Vector3(x * blockSize, y * blockSize, zOffset);
                 Instantiate(prefabToSpawn, spawnPos, Quaternion.identity, transform);
             }

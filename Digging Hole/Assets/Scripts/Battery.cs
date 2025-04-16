@@ -42,15 +42,15 @@ public class Battery : MonoBehaviour
     {
         float percent = energy / maxEnergy;
 
-        if (percent > 0.5f)
+        if (percent > 0.7f)
         {
             image.sprite = heightBattery;
         }
-        else if (percent > 0.2f)
+        else if (percent > 0.6f)
         {
             image.sprite = heightMiddleBattery;
         }
-        else if (percent > 0.1f)
+        else if (percent > 0.5f)
         {
             image.sprite = lowMiddleBattery;
         }

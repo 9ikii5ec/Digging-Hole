@@ -56,13 +56,23 @@ public class DiggerRuntime : MonoBehaviour
 
     private void Update()
     {
-        tools.PlaceLamp();
         height.text = "Height: " + transform.position.y.ToString("F1") + " m";
 
-        if (transform.position.y <= -60f)
+        if (transform.position.y <= -75f || battery.energy <= 0.5f)
         {
+            FirstPersonMovement person = GetComponent<FirstPersonMovement>();
+            person.canRun = false;
+
             restartButton.SetActive(true);
             isCanDigging = false;
+        }
+        else if (battery.energy >= 0.5f)
+        {
+            FirstPersonMovement person = GetComponent<FirstPersonMovement>();
+            person.canRun = true;
+
+            restartButton.SetActive(false);
+            isCanDigging = true;
         }
 
         if (Input.GetKeyDown(keyToPersistData))
@@ -138,7 +148,7 @@ public class DiggerRuntime : MonoBehaviour
         float y = transform.position.y;
         size = defaultSize;
 
-        if (y <= -50f)
+        if (y <= -70f)
         {
             action = ActionType.PaintHoles;
         }
@@ -166,7 +176,10 @@ public class DiggerRuntime : MonoBehaviour
 
     public void RestartScene()
     {
+        diggerMasterRuntime.DeleteAllPersistedData();
+
         int currentScene = SceneManager.GetActiveScene().buildIndex;
         SceneManager.LoadScene(currentScene);
     }
+
 }
