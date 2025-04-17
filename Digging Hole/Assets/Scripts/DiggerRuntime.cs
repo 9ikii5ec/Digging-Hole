@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System.Collections;
 
 public class DiggerRuntime : MonoBehaviour
 {
@@ -36,6 +37,8 @@ public class DiggerRuntime : MonoBehaviour
     [SerializeField] private Inventory backPuck;
     [SerializeField] private Text height;
     [SerializeField] private GameObject restartButton;
+    [SerializeField] private Terrain currentTerrain;
+    [SerializeField] private Terrain prefabTerrain;
 
     private DiggerMasterRuntime diggerMasterRuntime;
     private Transform playerTransform;
@@ -43,14 +46,32 @@ public class DiggerRuntime : MonoBehaviour
 
     private void Start()
     {
+        StartCoroutine(InitializeAfterDelay());
+    }
+
+    private IEnumerator InitializeAfterDelay()
+    {
+        yield return null;
+
         diggerMasterRuntime = FindObjectOfType<DiggerMasterRuntime>();
+
+        if (diggerMasterRuntime != null)
+        {
+            diggerMasterRuntime.SetupRuntimeTerrain(currentTerrain);
+            diggerMasterRuntime.DeleteAllPersistedData();
+        }
+        else
+        {
+            Debug.LogWarning("DiggerMasterRuntime не найден после инициализации.");
+        }
+
         playerTransform = transform;
         defaultSize = size;
 
         if (!diggerMasterRuntime)
         {
             enabled = false;
-            Debug.LogWarning("DiggerRuntime требует DiggerMasterRuntime в сцене. Скрипт будет отключен.");
+            Debug.LogWarning("DiggerRuntime требует DiggerMasterRuntime. Скрипт отключён.");
         }
     }
 
@@ -60,26 +81,22 @@ public class DiggerRuntime : MonoBehaviour
 
         if (transform.position.y <= -75f || battery.energy <= 0.5f)
         {
-            FirstPersonMovement person = GetComponent<FirstPersonMovement>();
-            person.canRun = false;
-
+            GetComponent<FirstPersonMovement>().canRun = false;
             restartButton.SetActive(true);
             isCanDigging = false;
         }
         else if (battery.energy >= 0.5f)
         {
-            FirstPersonMovement person = GetComponent<FirstPersonMovement>();
-            person.canRun = true;
-
+            GetComponent<FirstPersonMovement>().canRun = true;
             restartButton.SetActive(false);
             isCanDigging = true;
         }
 
-        if (Input.GetKeyDown(keyToPersistData))
+        if (Input.GetKeyDown(keyToPersistData) && diggerMasterRuntime != null)
         {
             diggerMasterRuntime.PersistAll();
         }
-        else if (Input.GetKeyDown(keyToDeleteData))
+        else if (Input.GetKeyDown(keyToDeleteData) && diggerMasterRuntime != null)
         {
             diggerMasterRuntime.DeleteAllPersistedData();
         }
@@ -90,9 +107,7 @@ public class DiggerRuntime : MonoBehaviour
             if (IsTouchingUI()) return;
 
             backPuck.UpdateInventoryRaycast();
-
-            if (battery.energy > 0)
-                Digging();
+            if (battery.energy > 0) Digging();
         }
 #else
         if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
@@ -100,9 +115,7 @@ public class DiggerRuntime : MonoBehaviour
             if (IsTouchingUI()) return;
 
             backPuck.UpdateInventoryRaycast();
-
-            if (battery.energy > 0)
-                Digging();
+            if (battery.energy > 0) Digging();
         }
 #endif
     }
@@ -114,14 +127,14 @@ public class DiggerRuntime : MonoBehaviour
 #else
         if (Input.touchCount > 0)
             return EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId);
-        else
-            return false;
+        return false;
 #endif
     }
 
     public void Digging()
     {
-        if (!isCanDigging) return;
+        if (!isCanDigging || diggerMasterRuntime == null)
+            return;
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out var hit, 2000f))
@@ -149,9 +162,7 @@ public class DiggerRuntime : MonoBehaviour
         size = defaultSize;
 
         if (y <= -70f)
-        {
-            action = ActionType.PaintHoles;
-        }
+            transform.position = transform.position + new Vector3(0f,-10f,0f);
         else if (y <= -30f)
         {
             textureIndex = 3;
@@ -165,21 +176,15 @@ public class DiggerRuntime : MonoBehaviour
         else if (y <= -1f)
         {
             textureIndex = 2;
-            size = defaultSize;
         }
         else if (y >= 1f)
         {
             textureIndex = 0;
-            size = defaultSize;
         }
     }
 
     public void RestartScene()
     {
-        diggerMasterRuntime.DeleteAllPersistedData();
-
-        int currentScene = SceneManager.GetActiveScene().buildIndex;
-        SceneManager.LoadScene(currentScene);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
-
 }
