@@ -57,8 +57,8 @@ public class DiggerRuntime : MonoBehaviour
 
         if (diggerMasterRuntime != null)
         {
+            ResetTerrainHoles();
             diggerMasterRuntime.SetupRuntimeTerrain(currentTerrain);
-            diggerMasterRuntime.DeleteAllPersistedData();
         }
         else
         {
@@ -162,7 +162,7 @@ public class DiggerRuntime : MonoBehaviour
         size = defaultSize;
 
         if (y <= -70f)
-            transform.position = transform.position + new Vector3(0f,-10f,0f);
+            transform.position = transform.position + new Vector3(0f, -10f, 0f);
         else if (y <= -30f)
         {
             textureIndex = 3;
@@ -186,5 +186,22 @@ public class DiggerRuntime : MonoBehaviour
     public void RestartScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    private void ResetTerrainHoles()
+    {
+        var terrainData = currentTerrain.terrainData;
+        var res = terrainData.holesResolution;
+        var holes = new bool[res, res];
+
+        for (int x = 0; x < res; x++)
+        {
+            for (int y = 0; y < res; y++)
+            {
+                holes[x, y] = true;
+            }
+        }
+
+        terrainData.SetHoles(0, 0, holes);
     }
 }
