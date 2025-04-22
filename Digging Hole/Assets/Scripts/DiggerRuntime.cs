@@ -50,7 +50,6 @@ public class DiggerRuntime : MonoBehaviour
         if (diggerMasterRuntime != null)
         {
             ResetTerrainHoles();
-            //diggerMasterRuntime.SetupRuntimeTerrain(currentTerrain);
         }
         else
         {
@@ -96,7 +95,7 @@ public class DiggerRuntime : MonoBehaviour
         if (IsDigInput())
         {
             backPuck.UpdateInventoryRaycast();
-            if (battery.energy > 0) 
+            if (battery.energy > 0)
                 Digging();
         }
     }
@@ -109,11 +108,16 @@ public class DiggerRuntime : MonoBehaviour
 
     private Vector2 GetInputPosition()
     {
-#if UNITY_EDITOR || UNITY_STANDALONE
-        return Input.mousePosition;
-#else
-        return Input.GetTouch(0).position;
-#endif
+        // Если есть тач — используем его
+        if (Input.touchCount > 0)
+            return Input.GetTouch(0).position;
+
+        // Если нажата кнопка мыши — используем мышь
+        if (Input.GetMouseButton(0) || Input.GetMouseButtonDown(0))
+            return Input.mousePosition;
+
+        // Если ничего нет — возвращаем Vector2.zero
+        return Vector2.zero;
     }
 
     public void Digging()
@@ -124,19 +128,31 @@ public class DiggerRuntime : MonoBehaviour
         Debug.LogError("DIGGING");
 
         Vector2 inputPos = GetInputPosition();
+
+        //Vector2 inputPos = GetInputPosition();
+        //if (inputPos == Vector2.zero)
+        //    return;
+
         Ray ray = fpsCamera.ScreenPointToRay(inputPos);
         if (Physics.Raycast(ray, out var hit, 2000f))
         {
+            Debug.LogError("Raycast попал в: " + hit.collider.name);
+
             float distance = Vector3.Distance(playerTransform.position, hit.point);
 
             if (distance <= digDistance)
             {
                 CheckYHeight();
 
-                if (editAsynchronously)
-                    diggerMasterRuntime.ModifyAsyncBuffured(hit.point, brush, action, textureIndex, opacity, size);
-                else
-                    diggerMasterRuntime.Modify(hit.point, brush, action, textureIndex, opacity, size);
+#if UNITY_WEBGL
+                Debug.LogError("MODIFY");
+                diggerMasterRuntime.Modify(hit.point, brush, action, textureIndex, opacity, size);
+#else
+    if (editAsynchronously)
+        diggerMasterRuntime.ModifyAsyncBuffered(hit.point, brush, action, textureIndex, opacity, size);
+    else
+        diggerMasterRuntime.Modify(hit.point, brush, action, textureIndex, opacity, size);
+#endif
 
                 battery.MinusBatteryEnergy(energyShovelCost);
             }

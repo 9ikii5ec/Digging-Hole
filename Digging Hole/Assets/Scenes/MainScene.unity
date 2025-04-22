@@ -4975,7 +4975,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2040672677219600168, guid: a446d08b479f3384887baf06c00d2764, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.43
+      value: 0.594
       objectReference: {fileID: 0}
     - target: {fileID: 2040672677219600168, guid: a446d08b479f3384887baf06c00d2764, type: 3}
       propertyPath: m_LocalPosition.y
@@ -4983,7 +4983,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2040672677219600168, guid: a446d08b479f3384887baf06c00d2764, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.12
+      value: -0.123
       objectReference: {fileID: 0}
     - target: {fileID: 2040672677219600168, guid: a446d08b479f3384887baf06c00d2764, type: 3}
       propertyPath: m_LocalRotation.w
@@ -32081,7 +32081,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2211564899198745196, guid: caf9732433f4dc044845763962493607, type: 3}
       propertyPath: RewardVideoAd.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2211564899198745196, guid: caf9732433f4dc044845763962493607, type: 3}
       propertyPath: RewardVideoAd.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
