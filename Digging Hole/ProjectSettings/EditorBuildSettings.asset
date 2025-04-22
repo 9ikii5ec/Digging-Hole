@@ -8,4 +8,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MainScene.unity
     guid: 1d35b98b087dfa943b9356ebdf56641d
+  - enabled: 0
+    path: Assets/Scenes/TestForYG.unity
+    guid: aeddebcb2658994449a060bc77464c83
   m_configObjects: {}

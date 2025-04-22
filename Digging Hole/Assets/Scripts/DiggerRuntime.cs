@@ -27,7 +27,6 @@ public class DiggerRuntime : MonoBehaviour
     public KeyCode keyToDeleteData = KeyCode.K;
 
     [Header("Settings")]
-    [SerializeField] private ShovelSettings Shovel;
     [SerializeField] private UpgradeTools tools;
 
     [Header("Other")]
@@ -38,7 +37,7 @@ public class DiggerRuntime : MonoBehaviour
     [SerializeField] private Text height;
     [SerializeField] private GameObject restartButton;
     [SerializeField] private Terrain currentTerrain;
-    [SerializeField] private Terrain prefabTerrain;
+    [SerializeField] private Camera fpsCamera;
 
     private DiggerMasterRuntime diggerMasterRuntime;
     private Transform playerTransform;
@@ -46,19 +45,12 @@ public class DiggerRuntime : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine(InitializeAfterDelay());
-    }
-
-    private IEnumerator InitializeAfterDelay()
-    {
-        yield return null;
-
         diggerMasterRuntime = FindObjectOfType<DiggerMasterRuntime>();
 
         if (diggerMasterRuntime != null)
         {
             ResetTerrainHoles();
-            diggerMasterRuntime.SetupRuntimeTerrain(currentTerrain);
+            //diggerMasterRuntime.SetupRuntimeTerrain(currentTerrain);
         }
         else
         {
@@ -92,42 +84,35 @@ public class DiggerRuntime : MonoBehaviour
             isCanDigging = true;
         }
 
-        if (Input.GetKeyDown(keyToPersistData) && diggerMasterRuntime != null)
-        {
-            diggerMasterRuntime.PersistAll();
-        }
-        else if (Input.GetKeyDown(keyToDeleteData) && diggerMasterRuntime != null)
-        {
-            diggerMasterRuntime.DeleteAllPersistedData();
-        }
+        //if (Input.GetKeyDown(keyToPersistData) && diggerMasterRuntime != null)
+        //{
+        //    diggerMasterRuntime.PersistAll();
+        //}
+        //else if (Input.GetKeyDown(keyToDeleteData) && diggerMasterRuntime != null)
+        //{
+        //    diggerMasterRuntime.DeleteAllPersistedData();
+        //}
 
-#if UNITY_EDITOR || UNITY_STANDALONE
-        if (Input.GetMouseButtonDown(0))
+        if (IsDigInput())
         {
-            if (IsTouchingUI()) return;
-
             backPuck.UpdateInventoryRaycast();
-            if (battery.energy > 0) Digging();
+            if (battery.energy > 0) 
+                Digging();
         }
-#else
-        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
-        {
-            if (IsTouchingUI()) return;
-
-            backPuck.UpdateInventoryRaycast();
-            if (battery.energy > 0) Digging();
-        }
-#endif
     }
 
-    private bool IsTouchingUI()
+    private bool IsDigInput()
+    {
+        return Input.GetMouseButtonDown(0) || (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began);
+    }
+
+
+    private Vector2 GetInputPosition()
     {
 #if UNITY_EDITOR || UNITY_STANDALONE
-        return EventSystem.current.IsPointerOverGameObject();
+        return Input.mousePosition;
 #else
-        if (Input.touchCount > 0)
-            return EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId);
-        return false;
+        return Input.GetTouch(0).position;
 #endif
     }
 
@@ -136,7 +121,10 @@ public class DiggerRuntime : MonoBehaviour
         if (!isCanDigging || diggerMasterRuntime == null)
             return;
 
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Debug.LogError("DIGGING");
+
+        Vector2 inputPos = GetInputPosition();
+        Ray ray = fpsCamera.ScreenPointToRay(inputPos);
         if (Physics.Raycast(ray, out var hit, 2000f))
         {
             float distance = Vector3.Distance(playerTransform.position, hit.point);
@@ -150,7 +138,6 @@ public class DiggerRuntime : MonoBehaviour
                 else
                     diggerMasterRuntime.Modify(hit.point, brush, action, textureIndex, opacity, size);
 
-                Shovel?.Swing();
                 battery.MinusBatteryEnergy(energyShovelCost);
             }
         }

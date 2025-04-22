@@ -1,0 +1,2 @@
+Build path: D:/Unity Projects D/Digging-Hole/Digging Hole/Build/FinalBuild
+Build number: 6

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class FirstPersonLook : MonoBehaviour
 {
@@ -22,13 +23,18 @@ public class FirstPersonLook : MonoBehaviour
         velocity.y = -cameraRotation.x;
     }
 
-
-    private void Update()
+    void Update()
     {
-#if UNITY_EDITOR || UNITY_STANDALONE
-        HandleMouseLook();
-#elif UNITY_ANDROID || UNITY_IOS
-        HandleTouchLook();
+#if UNITY_WEBGL
+        if (Input.touchCount > 0)
+            HandleTouchLook();
+        else
+            HandleMouseLook();
+#else
+        if (Input.touchSupported && Application.isMobilePlatform)
+            HandleTouchLook();
+        else
+            HandleMouseLook();
 #endif
     }
 
@@ -55,12 +61,11 @@ public class FirstPersonLook : MonoBehaviour
         {
             Touch touch = Input.GetTouch(i);
 
-            // Начало нового касания в области управления камерой
-            if (lookFingerId == -1 && touch.phase == TouchPhase.Began && touch.position.x > Screen.width * 0.5f)
+            if (lookFingerId == -1 && touch.phase == TouchPhase.Began)
             {
                 lookFingerId = touch.fingerId;
                 lastTouchPosition = touch.position;
-                frameVelocity = Vector2.zero; // Сбросить скорость!
+                frameVelocity = Vector2.zero;
                 return;
             }
 
@@ -82,7 +87,7 @@ public class FirstPersonLook : MonoBehaviour
                 if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
                 {
                     lookFingerId = -1;
-                    frameVelocity = Vector2.zero; // Без этого — продолжается "инерция"
+                    frameVelocity = Vector2.zero;
                 }
             }
         }
