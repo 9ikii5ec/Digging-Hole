@@ -30302,8 +30302,8 @@ MonoBehaviour:
   layer: 0
   chunksTag: Untagged
   enableOcclusionCulling: 0
-  forceMicroSplatMaterialAssetUpdate: 1
-  autoSaveMeshesAsAssets: 1
+  forceMicroSplatMaterialAssetUpdate: 0
+  autoSaveMeshesAsAssets: 0
 --- !u!4 &1540201546
 Transform:
   m_ObjectHideFlags: 0
@@ -43313,7 +43313,6 @@ TerrainCollider:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 2058557768}
   - {fileID: 913074371}
   - {fileID: 230679434}
   - {fileID: 36753528}
@@ -43322,3 +43321,4 @@ SceneRoots:
   - {fileID: 1935693360}
   - {fileID: 1856726983}
   - {fileID: 1610243409}
+  - {fileID: 2058557768}

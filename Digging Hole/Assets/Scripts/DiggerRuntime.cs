@@ -129,10 +129,6 @@ public class DiggerRuntime : MonoBehaviour
 
         Vector2 inputPos = GetInputPosition();
 
-        //Vector2 inputPos = GetInputPosition();
-        //if (inputPos == Vector2.zero)
-        //    return;
-
         Ray ray = fpsCamera.ScreenPointToRay(inputPos);
         if (Physics.Raycast(ray, out var hit, 2000f))
         {
@@ -148,10 +144,10 @@ public class DiggerRuntime : MonoBehaviour
                 Debug.LogError("MODIFY");
                 diggerMasterRuntime.Modify(hit.point, brush, action, textureIndex, opacity, size);
 #else
-    if (editAsynchronously)
-        diggerMasterRuntime.ModifyAsyncBuffered(hit.point, brush, action, textureIndex, opacity, size);
-    else
-        diggerMasterRuntime.Modify(hit.point, brush, action, textureIndex, opacity, size);
+                if (editAsynchronously)
+                    diggerMasterRuntime.ModifyAsyncBuffured(hit.point, brush, action, textureIndex, opacity, size);
+                else
+                    diggerMasterRuntime.Modify(hit.point, brush, action, textureIndex, opacity, size);
 #endif
 
                 battery.MinusBatteryEnergy(energyShovelCost);
