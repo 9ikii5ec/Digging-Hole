@@ -82,7 +82,7 @@ public class Inventory : MonoBehaviour
         return items.Count > 0;
     }
 
-    private void ShowText(string text)
+    public void ShowText(string text)
     {
         if (currentTween != null && currentTween.IsActive())
             currentTween.Kill();

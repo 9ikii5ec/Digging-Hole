@@ -45,6 +45,8 @@ public class DiggerRuntime : MonoBehaviour
 
     private void Start()
     {
+        //Cursor.lockState = CursorLockMode.Locked;
+
         diggerMasterRuntime = FindObjectOfType<DiggerMasterRuntime>();
 
         if (diggerMasterRuntime != null)
@@ -75,6 +77,7 @@ public class DiggerRuntime : MonoBehaviour
             GetComponent<FirstPersonMovement>().canRun = false;
             restartButton.SetActive(true);
             isCanDigging = false;
+            //backPuck.ShowText("Press Esc to unlock mouse");
         }
         else if (battery.energy >= 0.5f)
         {

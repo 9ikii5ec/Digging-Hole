@@ -220,6 +220,10 @@ namespace Digger.Modules.Core.Sources
 
         public static byte[] GetBytes(string path)
         {
+#if UNITY_WEBGL && !UNITY_EDITOR
+return null;
+#endif
+
 #if ((!UNITY_ANDROID && !UNITY_WEBGL) || UNITY_EDITOR)
             return File.Exists(path) ? File.ReadAllBytes(path) : null;
 #else
