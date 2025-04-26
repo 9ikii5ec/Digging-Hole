@@ -30302,7 +30302,7 @@ MonoBehaviour:
   layer: 0
   chunksTag: Untagged
   enableOcclusionCulling: 0
-  forceMicroSplatMaterialAssetUpdate: 0
+  forceMicroSplatMaterialAssetUpdate: 1
   autoSaveMeshesAsAssets: 0
 --- !u!4 &1540201546
 Transform:

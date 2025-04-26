@@ -42,12 +42,14 @@ public class DiggerRuntime : MonoBehaviour
     private DiggerMasterRuntime diggerMasterRuntime;
     private Transform playerTransform;
     private bool isCanDigging = true;
+    private FirstPersonMovement movement;
 
     private void Start()
     {
         //Cursor.lockState = CursorLockMode.Locked;
 
         diggerMasterRuntime = FindObjectOfType<DiggerMasterRuntime>();
+        movement = GetComponent<FirstPersonMovement>();
 
         if (diggerMasterRuntime != null)
         {
@@ -70,38 +72,36 @@ public class DiggerRuntime : MonoBehaviour
 
     private void Update()
     {
-        height.text = "Height: " + transform.position.y.ToString("F1") + " m";
-
-        if (transform.position.y <= -75f || battery.energy <= 0.5f)
-        {
-            GetComponent<FirstPersonMovement>().canRun = false;
-            restartButton.SetActive(true);
-            isCanDigging = false;
-            //backPuck.ShowText("Press Esc to unlock mouse");
-        }
-        else if (battery.energy >= 0.5f)
-        {
-            GetComponent<FirstPersonMovement>().canRun = true;
-            restartButton.SetActive(false);
-            isCanDigging = true;
-        }
-
-        //if (Input.GetKeyDown(keyToPersistData) && diggerMasterRuntime != null)
-        //{
-        //    diggerMasterRuntime.PersistAll();
-        //}
-        //else if (Input.GetKeyDown(keyToDeleteData) && diggerMasterRuntime != null)
-        //{
-        //    diggerMasterRuntime.DeleteAllPersistedData();
-        //}
-
-        if (IsDigInput())
-        {
-            backPuck.UpdateInventoryRaycast();
-            if (battery.energy > 0)
-                Digging();
-        }
+        UpdateUI();
+        CheckPlayerState();
+        HandleDiggingInput();
     }
+
+    private void UpdateUI()
+    {
+        height.text = $"Height: {transform.position.y:F1} m";
+    }
+
+    private void CheckPlayerState()
+    {
+        bool isDead = transform.position.y <= -75f || battery.energy <= 0.5f;
+
+        movement.canRun = !isDead;
+        restartButton.SetActive(isDead);
+        isCanDigging = !isDead;
+    }
+
+    private void HandleDiggingInput()
+    {
+        if (!IsDigInput())
+            return;
+
+        backPuck.UpdateInventoryRaycast();
+
+        if (battery.energy > 0)
+            Digging();
+    }
+
 
     private bool IsDigInput()
     {
@@ -128,15 +128,11 @@ public class DiggerRuntime : MonoBehaviour
         if (!isCanDigging || diggerMasterRuntime == null)
             return;
 
-        Debug.LogError("DIGGING");
-
         Vector2 inputPos = GetInputPosition();
 
         Ray ray = fpsCamera.ScreenPointToRay(inputPos);
         if (Physics.Raycast(ray, out var hit, 2000f))
         {
-            Debug.LogError("Raycast попал в: " + hit.collider.name);
-
             float distance = Vector3.Distance(playerTransform.position, hit.point);
 
             if (distance <= digDistance)
@@ -144,7 +140,6 @@ public class DiggerRuntime : MonoBehaviour
                 CheckYHeight();
 
 #if UNITY_WEBGL
-                Debug.LogError("MODIFY");
                 diggerMasterRuntime.Modify(hit.point, brush, action, textureIndex, opacity, size);
 #else
                 if (editAsynchronously)
