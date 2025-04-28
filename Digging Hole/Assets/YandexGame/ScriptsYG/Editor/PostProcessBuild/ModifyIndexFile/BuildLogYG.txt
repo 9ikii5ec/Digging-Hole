@@ -1,2 +1,2 @@
-Build path: D:/Unity Projects D/Digging-Hole/Digging Hole/Build/TestScene
-Build number: 21
+Build path: D:/Unity Projects D/Digging-Hole/Digging Hole/Build/FinalBuild
+Build number: 26
