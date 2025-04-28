@@ -105,9 +105,33 @@ public class DiggerRuntime : MonoBehaviour
 
     private bool IsDigInput()
     {
-        return Input.GetMouseButtonDown(0) || (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began);
+        if (Input.touchCount > 0)
+        {
+            Vector2 touchPos = Input.GetTouch(0).position;
+            if (IsInDigArea(touchPos) && Input.GetTouch(0).phase == TouchPhase.Began)
+                return true;
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            Vector2 mousePos = Input.mousePosition;
+            if (IsInDigArea(mousePos))
+                return true;
+        }
+
+        return false;
     }
 
+    private bool IsInDigArea(Vector2 position)
+    {
+        float screenWidth = Screen.width;
+        float screenHeight = Screen.height;
+
+        // Пример: только правая треть экрана
+        Rect digArea = new Rect(screenWidth * 0.23f, 0, screenWidth * 0.6f, screenHeight);
+
+        return digArea.Contains(position);
+    }
 
     private Vector2 GetInputPosition()
     {
@@ -167,12 +191,12 @@ public class DiggerRuntime : MonoBehaviour
         }
         else if (y <= -15f)
         {
-            textureIndex = 4;
+            textureIndex = 2;
             size -= 0.5f;
         }
         else if (y <= -1f)
         {
-            textureIndex = 2;
+            textureIndex = 1;
         }
         else if (y >= 1f)
         {

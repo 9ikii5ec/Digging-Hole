@@ -63,9 +63,12 @@ public class FirstPersonLook : MonoBehaviour
 
             if (lookFingerId == -1 && touch.phase == TouchPhase.Began)
             {
-                lookFingerId = touch.fingerId;
-                lastTouchPosition = touch.position;
-                frameVelocity = Vector2.zero;
+                if (IsInLookArea(touch.position))  // <--- Добавляем проверку здесь
+                {
+                    lookFingerId = touch.fingerId;
+                    lastTouchPosition = touch.position;
+                    frameVelocity = Vector2.zero;
+                }
                 return;
             }
 
@@ -98,4 +101,16 @@ public class FirstPersonLook : MonoBehaviour
         transform.localRotation = Quaternion.AngleAxis(-velocity.y, Vector3.right);
         character.localRotation = Quaternion.AngleAxis(velocity.x, Vector3.up);
     }
+
+    private bool IsInLookArea(Vector2 position)
+    {
+        float screenWidth = Screen.width;
+        float screenHeight = Screen.height;
+
+        // Ограничиваем управление камерой только внутри этой области
+        Rect lookArea = new Rect(screenWidth * 0.23f, 0, screenWidth * 0.6f, screenHeight);
+
+        return lookArea.Contains(position);
+    }
+
 }
